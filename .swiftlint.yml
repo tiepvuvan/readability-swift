@@ -1,0 +1,98 @@
+# SwiftLint Configuration for ReadabilitySwift
+
+# Enabled Rules
+enabled_rules:
+  - array_init
+  - closure_spacing
+  - contains_over_filter_count
+  - contains_over_filter_is_empty
+  - empty_count
+  - empty_string
+  - fatal_error_message
+  - first_where
+  - force_cast
+  - force_try
+  - force_unwrapping
+  - identical_operands
+  - implicit_getter
+  - joined_default_parameter
+  - last_where
+  - legacy_random
+  - literal_expression_end_indentation
+  - multiline_arguments
+  - multiline_literal_brackets
+  - multiline_parameters
+  - operator_usage_whitespace
+  - overridden_super_call
+  - redundant_discardable_let
+  - redundant_nil_coalescing
+  - redundant_string_enum_value
+  - redundant_type_annotation
+  - redundant_void_return
+  - sorted_first_last
+  - syntactic_sugar
+  - toggle_bool
+  - trailing_whitespace
+  - unneeded_break_in_switch
+  - unused_closure_parameter
+  - unused_enumerated
+  - unused_optional_binding
+  - vertical_whitespace
+  - void_return
+  - yoda_condition
+
+# Disabled Rules (due to project style preferences)
+disabled_rules:
+  - line_length # Some documentation lines are longer
+  - function_body_length # Some parsing functions are complex
+  - cyclomatic_complexity # Parsing logic has necessary complexity
+  - file_length # Main implementation files are comprehensive
+
+# Rule Configurations
+type_body_length:
+  warning: 300
+  error: 400
+
+function_body_length:
+  warning: 100
+  error: 150
+
+line_length:
+  warning: 120
+  error: 150
+  ignores_urls: true
+  ignores_function_declarations: true
+  ignores_comments: true
+
+cyclomatic_complexity:
+  warning: 15
+  error: 25
+
+file_length:
+  warning: 500
+  error: 800
+
+type_name:
+  min_length: 3
+  max_length: 50
+
+identifier_name:
+  min_length: 2
+  max_length: 50
+  excluded:
+    - id
+    - URL
+    - url
+
+# Paths
+included:
+  - Sources
+  - Tests
+
+excluded:
+  - .build
+  - .swiftpm
+  - Tests/ReadabilitySwiftTests/Resources
+
+# Reporter
+reporter: "xcode"

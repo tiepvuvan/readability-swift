@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(swift test)",
+      "Bash(swift build)",
+      "WebFetch(domain:scinfu.github.io)",
+      "WebFetch(domain:gist.github.com)",
+      "Bash(swift:*)",
+      "WebFetch(domain:api.github.com)",
+      "Bash(rm:*)",
+      "Bash(touch:*)"
+    ],
+    "deny": []
+  }
+}
