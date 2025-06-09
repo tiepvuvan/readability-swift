@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
 
 jobs:
   test:
@@ -12,72 +12,72 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [macos-latest]
         swift: ["5.10", "5.9"]
         include:
           - os: macos-latest
             swift: "5.10"
             xcode: "15.4"
-          - os: macos-latest  
+          - os: macos-latest
             swift: "5.9"
             xcode: "15.0"
-    
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Xcode (macOS)
-      if: runner.os == 'macOS'
-      uses: maxim-lobanov/setup-xcode@v1
-      with:
-        xcode-version: ${{ matrix.xcode }}
-    
-    - name: Setup Swift (Linux)
-      if: runner.os == 'Linux'
-      uses: swift-actions/setup-swift@v1
-      with:
-        swift-version: ${{ matrix.swift }}
-    
-    - name: Swift Version
-      run: swift --version
-      
-    - name: Build
-      run: swift build -v
-      
-    - name: Run Tests
-      run: swift test -v --enable-code-coverage
-      
-    - name: Generate Code Coverage Report (macOS only)
-      if: runner.os == 'macOS' && matrix.swift == '5.10'
-      run: |
-        xcrun llvm-cov export -format="lcov" \
-          .build/debug/ReadabilitySwiftPackageTests.xctest/Contents/MacOS/ReadabilitySwiftPackageTests \
-          -instr-profile .build/debug/codecov/default.profdata > coverage.lcov
-          
-    - name: Upload Coverage to Codecov (macOS only)
-      if: runner.os == 'macOS' && matrix.swift == '5.10'
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./coverage.lcov
-        fail_ci_if_error: false
+      - uses: actions/checkout@v4
+
+      - name: Setup Xcode (macOS)
+        if: runner.os == 'macOS'
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: ${{ matrix.xcode }}
+
+      - name: Setup Swift (Linux)
+        if: runner.os == 'Linux'
+        uses: swift-actions/setup-swift@v1
+        with:
+          swift-version: ${{ matrix.swift }}
+
+      - name: Swift Version
+        run: swift --version
+
+      - name: Build
+        run: swift build -v
+
+      - name: Run Tests
+        run: swift test -v --enable-code-coverage
+
+      - name: Generate Code Coverage Report (macOS only)
+        if: runner.os == 'macOS' && matrix.swift == '5.10'
+        run: |
+          xcrun llvm-cov export -format="lcov" \
+            .build/debug/ReadabilitySwiftPackageTests.xctest/Contents/MacOS/ReadabilitySwiftPackageTests \
+            -instr-profile .build/debug/codecov/default.profdata > coverage.lcov
+
+      - name: Upload Coverage to Codecov (macOS only)
+        if: runner.os == 'macOS' && matrix.swift == '5.10'
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.lcov
+          fail_ci_if_error: false
 
   lint:
     name: Swift Lint
     runs-on: macos-latest
-    
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Xcode
-      uses: maxim-lobanov/setup-xcode@v1
-      with:
-        xcode-version: "15.4"
-        
-    - name: Install SwiftLint
-      run: |
-        brew install swiftlint
-        
-    - name: Run SwiftLint
-      run: swiftlint lint --reporter github-actions-logging
+      - uses: actions/checkout@v4
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "15.4"
+
+      - name: Install SwiftLint
+        run: |
+          brew install swiftlint
+
+      - name: Run SwiftLint
+        run: swiftlint lint --reporter github-actions-logging
 
   compatibility:
     name: Platform Compatibility
@@ -90,58 +90,58 @@ jobs:
           - "platform=watchOS Simulator,name=Apple Watch Series 9 (45mm),OS=10.0"
           - "platform=macOS,arch=x86_64"
           - "platform=macOS,arch=arm64"
-    
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Xcode
-      uses: maxim-lobanov/setup-xcode@v1
-      with:
-        xcode-version: "15.4"
-        
-    - name: Build for ${{ matrix.destination }}
-      run: |
-        xcodebuild build \
-          -scheme ReadabilitySwift \
-          -destination "${{ matrix.destination }}" \
-          -configuration Release \
-          CODE_SIGNING_ALLOWED=NO
+      - uses: actions/checkout@v4
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "15.4"
+
+      - name: Build for ${{ matrix.destination }}
+        run: |
+          xcodebuild build \
+            -scheme ReadabilitySwift \
+            -destination "${{ matrix.destination }}" \
+            -configuration Release \
+            CODE_SIGNING_ALLOWED=NO
 
   performance:
     name: Performance Tests
     runs-on: macos-latest
-    
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Xcode
-      uses: maxim-lobanov/setup-xcode@v1
-      with:
-        xcode-version: "15.4"
-        
-    - name: Run Performance Tests
-      run: |
-        swift test --filter ReadabilitySwiftTests.testParsingPerformance
-        swift test --filter ReadabilitySwiftTests.testReadabilityDetectionPerformance
+      - uses: actions/checkout@v4
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "15.4"
+
+      - name: Run Performance Tests
+        run: |
+          swift test --filter ReadabilitySwiftTests.testParsingPerformance
+          swift test --filter ReadabilitySwiftTests.testReadabilityDetectionPerformance
 
   release:
     name: Release Check
     runs-on: macos-latest
     if: startsWith(github.ref, 'refs/tags/')
-    
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Xcode
-      uses: maxim-lobanov/setup-xcode@v1
-      with:
-        xcode-version: "15.4"
-        
-    - name: Validate Release Build
-      run: |
-        swift build -c release
-        swift test -c release
-        
-    - name: Create Release Archive
-      run: |
-        swift package archive-source
+      - uses: actions/checkout@v4
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "15.4"
+
+      - name: Validate Release Build
+        run: |
+          swift build -c release
+          swift test -c release
+
+      - name: Create Release Archive
+        run: |
+          swift package archive-source

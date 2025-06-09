@@ -5,6 +5,7 @@ import SwiftSoup
 extension Readability {
     
     // MARK: - Document Preparation
+    // swiftlint:disable:next identifier_name
     internal func _removeScripts() {
         do {
             let scripts = try document.select("script")
@@ -23,6 +24,7 @@ extension Readability {
         }
     }
     
+    // swiftlint:disable:next identifier_name
     internal func _prepDocument() {
         do {
             _unwrapNoscriptImages()
@@ -41,6 +43,7 @@ extension Readability {
         }
     }
     
+    // swiftlint:disable:next identifier_name
     internal func _unwrapNoscriptImages() {
         do {
             let imgs = try document.select("img")
@@ -67,6 +70,7 @@ extension Readability {
     }
     
     // MARK: - Candidate Selection
+    // swiftlint:disable:next identifier_name
     internal func _removeUnlikelyCandidates() {
         do {
             if let regex = try? NSRegularExpression(pattern: String(ReadabilityConstants.regexps["unlikelyCandidates"]!.dropFirst().dropLast(2)), options: [.caseInsensitive]) {
@@ -92,6 +96,7 @@ extension Readability {
         }
     }
     
+    // swiftlint:disable:next identifier_name
     internal func _transformMisusedDivsIntoParagraphs() {
         do {
             let divs = try document.select("div")
@@ -118,6 +123,7 @@ extension Readability {
         }
     }
     
+    // swiftlint:disable:next identifier_name
     internal func _hasSingleTagInside(element: Element, tagName: String) -> Bool {
         do {
             return try element.select(tagName).count == 1 && element.text().trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -127,6 +133,7 @@ extension Readability {
     }
     
     // MARK: - Candidate Scoring
+    // swiftlint:disable:next identifier_name
     internal func _getCandidates() -> [String: CandidateInfo] {
         var candidates: [String: CandidateInfo] = [:]
         
@@ -171,6 +178,7 @@ extension Readability {
         return candidates
     }
     
+    // swiftlint:disable:next identifier_name
     internal func _getTopCandidate(candidates: [String: CandidateInfo]) -> Element? {
         var topCandidate: CandidateInfo?
         var topScore = 0.0
@@ -187,6 +195,7 @@ extension Readability {
         return topCandidate?.element
     }
     
+    // swiftlint:disable:next identifier_name
     internal func _getClassWeight(element: Element) -> Double {
         var weight = 0.0
         
@@ -216,6 +225,7 @@ extension Readability {
         return weight
     }
     
+    // swiftlint:disable:next identifier_name
     internal func _getLinkDensity(element: Element) -> Double {
         do {
             let textLength = try element.text().count
@@ -240,6 +250,7 @@ extension Readability {
     }
     
     // MARK: - Content Extraction
+    // swiftlint:disable:next identifier_name
     internal func _getArticleContent(topCandidate: Element, candidates: [String: CandidateInfo]) -> Element {
         do {
             let articleContent = try Element(Tag.valueOf("div"), "")
@@ -285,6 +296,7 @@ extension Readability {
         }
     }
     
+    // swiftlint:disable:next identifier_name
     internal func _cleanConditionally(element: Element, tag: String) -> Element {
         do {
             let elements = try element.select(tag)
@@ -312,6 +324,7 @@ extension Readability {
     }
     
     // MARK: - Post Processing
+    // swiftlint:disable:next identifier_name
     internal func _postProcessContent(_ articleContent: Element) throws {
         _fixRelativeUris(articleContent)
         _simplifyNestedElements(articleContent)
@@ -321,6 +334,7 @@ extension Readability {
         }
     }
     
+    // swiftlint:disable:next identifier_name
     internal func _fixRelativeUris(_ articleContent: Element) {
         do {
             let baseUri = ""
@@ -350,6 +364,7 @@ extension Readability {
         }
     }
     
+    // swiftlint:disable:next identifier_name
     internal func _simplifyNestedElements(_ articleContent: Element) {
         do {
             let elements = try articleContent.select("div")
@@ -368,6 +383,7 @@ extension Readability {
         }
     }
     
+    // swiftlint:disable:next identifier_name
     internal func _cleanClasses(_ articleContent: Element) throws {
         let allElements = try articleContent.getAllElements()
         
@@ -386,6 +402,7 @@ extension Readability {
     }
     
     // MARK: - Metadata Extraction
+    // swiftlint:disable:next identifier_name
     internal func _getArticleTitle() -> String {
         do {
             var title = ""
@@ -412,6 +429,7 @@ extension Readability {
         }
     }
     
+    // swiftlint:disable:next identifier_name
     internal func _getExcerpt(textContent: String) -> String {
         let paragraphs = textContent.components(separatedBy: "\n\n")
         
@@ -426,6 +444,7 @@ extension Readability {
     }
     
     // MARK: - Utility Methods
+    // swiftlint:disable:next identifier_name
     internal func _getElementId(_ element: Element) throws -> String {
         let className = try element.attr("class")
         let elementId = try element.attr("id")
