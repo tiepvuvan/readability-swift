@@ -13,14 +13,11 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest]
-        swift: ["5.10", "5.9"]
+        swift: ["5.10.0"]
         include:
           - os: macos-latest
-            swift: "5.10"
+            swift: "5.10.0"
             xcode: "15.4"
-          - os: macos-latest
-            swift: "5.9"
-            xcode: "15.0"
 
     steps:
       - uses: actions/checkout@v4

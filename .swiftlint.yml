@@ -6,7 +6,6 @@ enabled_rules:
   - closure_spacing
   - contains_over_filter_count
   - contains_over_filter_is_empty
-  - empty_count
   - empty_string
   - fatal_error_message
   - first_where
@@ -75,15 +74,7 @@ file_length:
 type_name:
   min_length: 3
   max_length: 50
-
-identifier_name:
-  min_length: 2
-  max_length: 50
-  excluded:
-    - id
-    - URL
-    - url
-
+  
 # Paths
 included:
   - Sources
